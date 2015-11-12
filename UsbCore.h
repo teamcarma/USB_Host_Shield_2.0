@@ -91,7 +91,9 @@ typedef MAX3421e<P10, P9> MAX3421E; // Official Arduinos (UNO, Duemilanove, Mega
 #define USB_ERROR_FailGetConfDescr                      0xE3
 #define USB_ERROR_TRANSFER_TIMEOUT                      0xFF
 
-#define USB_XFER_TIMEOUT        5000    // (5000) USB transfer timeout in milliseconds, per section 9.2.6.1 of USB 2.0 spec
+// Set a very quick timeout of 50ms instead of the default 5 seconds in order to quickly poll if there is something.
+// We will then return to the low-power wait-for-interrupt ble.waitForEvent()
+#define USB_XFER_TIMEOUT        50 // 5000    // (5000) USB transfer timeout in milliseconds, per section 9.2.6.1 of USB 2.0 spec
 //#define USB_NAK_LIMIT         32000   // NAK limit for a transfer. 0 means NAKs are not counted
 #define USB_RETRY_LIMIT         3       // 3 retry limit for a transfer
 #define USB_SETTLE_DELAY        200     // settle delay in milliseconds
