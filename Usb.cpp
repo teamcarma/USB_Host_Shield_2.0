@@ -331,7 +331,6 @@ uint8_t USB::OutTransfer(EpInfo *pep, uint16_t nak_limit, uint16_t nbytes, uint8
                 while(rcode && ((long)(millis() - timeout) < 0L)) {
                         switch(rcode) {
                                 case hrNAK:
-                                        Serial.println("NAK");
                                         nak_count++;
                                         if(nak_limit && (nak_count == nak_limit))
                                                 goto breakout;
