@@ -331,6 +331,7 @@ uint8_t USB::OutTransfer(EpInfo *pep, uint16_t nak_limit, uint16_t nbytes, uint8
                 while(rcode && ((long)(millis() - timeout) < 0L)) {
                         switch(rcode) {
                                 case hrNAK:
+                                        Serial.println("NAK");
                                         nak_count++;
                                         if(nak_limit && (nak_count == nak_limit))
                                                 goto breakout;
@@ -352,9 +353,8 @@ uint8_t USB::OutTransfer(EpInfo *pep, uint16_t nak_limit, uint16_t nbytes, uint8
                         }//switch( rcode
 
                         /* process NAK according to Host out NAK bug */
-                        regWr(rSNDBC, 0);
-                        regWr(rSNDFIFO, *data_p);
-                        regWr(rSNDBC, bytes_tosend);
+                        bytesWr(rSNDFIFO, bytes_tosend, data_p); //filling output FIFO
+                        regWr(rSNDBC, bytes_tosend); //set number of bytes
                         regWr(rHXFR, (tokOUT | pep->epAddr)); //dispatch packet
                         while(!(regRd(rHIRQ) & bmHXFRDNIRQ)); //wait for the completion IRQ
                         regWr(rHIRQ, bmHXFRDNIRQ); //clear IRQ
